@@ -1,7 +1,9 @@
 # interferometer
 
 Implements the algorithms in:
+
 Reck, Michael, et al. "Experimental realization of any discrete unitary operator." Physical review letters 73.1 (1994): 58.
+
 Clements, William R., et al. "Optimal design for universal multiport interferometers." Optica 3.12 (2016): 1460-1465.
 
 Install:

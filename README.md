@@ -11,7 +11,11 @@ Install:
 $pip install interferometer
 ```
 Some examples:
-```import interferometer as itf
+```
+
+import interferometer as itf
+
+Example 1 ------
 
 I = itf.Interferometer()
 I.add_BS([1,2,1,4])

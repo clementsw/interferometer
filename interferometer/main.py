@@ -22,6 +22,15 @@ class Beamsplitter:
         self.theta = theta
         self.phi = phi
 
+    def __repr__(self):
+        repr = "\n Beam splitter between modes {} and {}: \n Theta angle: {:.2f} \n Phase: {:.2f}".format(
+            self.mode1,
+            self.mode2,
+            self.theta,
+            self.phi
+            )
+        return repr
+
 
 class Interferometer:
     """This class defines an interferometer. 
@@ -114,13 +123,13 @@ class Interferometer:
             plt.plot((x, x+0.3), (N - BS.mode2, N - BS.mode2), lw=1, color="blue")
             plt.plot((x+0.3, x+1), (N - BS.mode2, N - BS.mode1), lw=1, color="blue")
             plt.plot((x+0.4, x+0.9), (N - (BS.mode2 + BS.mode1)/2, N - (BS.mode2 + BS.mode1)/2), lw=1, color="blue")
-            reflectivity = str(np.cos(BS.theta)**2)
+            reflectivity = "{:2f}".format(np.cos(BS.theta)**2)
             plt.text(x+0.9, N + 0.05 - (BS.mode2 + BS.mode1)/2, reflectivity[0:3], color="green", fontsize=7)
 
             plt.plot((x+0.15, x+0.15), (N+0.3-(BS.mode2 + BS.mode1)/2., N+0.7-(BS.mode2 + BS.mode1)/2.), lw=1, color="blue")
             circle = plt.Circle((x+0.15, N+0.5-(BS.mode2 + BS.mode1)/2.), 0.1, fill=False)
             plt.gca().add_patch(circle)
-            phase = str(BS.phi)
+            phase = "{:2f}".format(BS.phi)
             if BS.phi > 0:
                 plt.text(x+0.2, N+0.7-(BS.mode2 + BS.mode1)/2., phase[0:3], color="red", fontsize=7)
             else:

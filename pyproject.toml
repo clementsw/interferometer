@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "interferometer"
+version = "1.0"
+authors = [
+  { name="William R. Clements", email="mail@william-clements.com" },
+]
+description = "Algorithms for universal interferometers"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy",
+    "matplotlib",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/clementsw/interferometer"
+"Bug Tracker" = "https://github.com/clementsw/interferometer/issues"
+
+[tool.setuptools]
+py-modules = ["interferometer"]
+

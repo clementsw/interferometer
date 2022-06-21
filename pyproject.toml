@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "interferometer"
-version = "1.0"
+version = "1.1"
 authors = [
   { name="William R. Clements", email="mail@william-clements.com" },
 ]
@@ -28,5 +28,5 @@ dependencies = [
 "Bug Tracker" = "https://github.com/clementsw/interferometer/issues"
 
 [tool.setuptools]
-py-modules = ["interferometer"]
+packages = ["interferometer"]
 

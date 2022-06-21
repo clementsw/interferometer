@@ -7,6 +7,10 @@ Created on Fri Mar 23 16:16:20 2018
 
 from setuptools import setup
 
+long_description = "Use this package to decompose unitary matrices into triangular or square interferometers. \
+  This package also provides tools to visualize the interferometers, build interferometers beam splitter by \
+  beam splitter, calculate the resulting transformation, and generate Haar-random unitaries."
+
 def readme():
     with open('README.rst') as f:
         return f.read()
@@ -14,7 +18,7 @@ def readme():
 setup(name='interferometer',
       version='1.0',
       description='Algorithms for universal interferometers',
-      long_description='Decompose unitary matrices into interferometers using two different algorithms, and visualize the interferometers',
+      long_description=long_description,
       classifiers=[
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',

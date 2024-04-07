@@ -185,12 +185,8 @@ def triangle_decomposition(U):
     for ii in range(N-1):
         for jj in range(N-1-ii):
             modes = [N - jj - 1, N - jj]
-            if U[ii, N - 2 - jj] != 0:
-                theta = custom_arctan(U[ii, N - 1 - jj], U[ii, N - 2 - jj])
-                phi = -custom_angle(-U[ii, N - 1 - jj], U[ii, N - 2 - jj])
-            else:
-                theta = np.pi/2
-                phi = 0
+            theta = custom_arctan(U[ii, N - 1 - jj], U[ii, N - 2 - jj])
+            phi = -custom_angle(-U[ii, N - 1 - jj], U[ii, N - 2 - jj])
             invT = np.eye(N, dtype=np.complex_)
             invT[modes[0]-1, modes[0]-1] = np.exp(-1j * phi) * np.cos(theta)
             invT[modes[0]-1, modes[1]-1] = np.exp(-1j * phi) * np.sin(theta)

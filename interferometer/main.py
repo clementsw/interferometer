@@ -185,8 +185,8 @@ def triangle_decomposition(U):
     for ii in range(N-1):
         for jj in range(N-1-ii):
             modes = [N - jj - 1, N - jj]
-            theta = np.arctan(abs(U[ii, N - 1 - jj] / U[ii, N - 2 - jj]))
-            phi = -np.angle(-U[ii, N - 1 - jj] / U[ii, N - 2 - jj])
+            theta = custom_arctan(U[ii, N - 1 - jj], U[ii, N - 2 - jj])
+            phi = -custom_angle(-U[ii, N - 1 - jj], U[ii, N - 2 - jj])
             invT = np.eye(N, dtype=np.complex_)
             invT[modes[0]-1, modes[0]-1] = np.exp(-1j * phi) * np.cos(theta)
             invT[modes[0]-1, modes[1]-1] = np.exp(-1j * phi) * np.sin(theta)
@@ -216,8 +216,8 @@ def square_decomposition(U):
         if np.mod(ii, 2) == 0:
             for jj in range(ii+1):
                 modes = [ii - jj + 1, ii + 2 - jj]
-                theta = np.arctan(abs(U[N-1-jj, ii-jj] / U[N-1-jj, ii-jj+1]))
-                phi = np.angle(U[N-1-jj, ii-jj] / U[N-1-jj, ii-jj+1])
+                theta = custom_arctan(U[N-1-jj, ii-jj], U[N-1-jj, ii-jj+1])
+                phi = custom_angle(U[N-1-jj, ii-jj], U[N-1-jj, ii-jj+1])
                 invT = np.eye(N, dtype=np.complex_)
                 invT[modes[0]-1, modes[0]-1] = np.exp(-1j * phi) * np.cos(theta)
                 invT[modes[0]-1, modes[1]-1] = np.exp(-1j * phi) * np.sin(theta)
@@ -228,8 +228,8 @@ def square_decomposition(U):
         else:
             for jj in range(ii+1):
                 modes = [N+jj-ii-1, N+jj-ii]
-                theta = np.arctan(abs(U[N+jj-ii-1, jj] / U[N+jj-ii-2, jj]))
-                phi = np.angle(-U[N+jj-ii-1, jj] / U[N+jj-ii-2, jj])
+                theta = custom_arctan(U[N+jj-ii-1, jj], U[N+jj-ii-2, jj])
+                phi = custom_angle(-U[N+jj-ii-1, jj], U[N+jj-ii-2, jj])
                 T = np.eye(N, dtype=np.complex_)
                 T[modes[0]-1, modes[0]-1] = np.exp(1j * phi) * np.cos(theta)
                 T[modes[0]-1, modes[1]-1] = -np.sin(theta)
@@ -246,8 +246,8 @@ def square_decomposition(U):
         invT[modes[1]-1, modes[0]-1] = -np.sin(BS.theta)
         invT[modes[1]-1, modes[1]-1] = np.cos(BS.theta)
         U = np.matmul(invT, U)
-        theta = np.arctan(abs(U[modes[1]-1, modes[0]-1]/U[modes[1]-1, modes[1]-1]))
-        phi = np.angle(U[modes[1]-1, modes[0]-1] / U[modes[1]-1, modes[1]-1])
+        theta = custom_arctan(U[modes[1]-1, modes[0]-1], U[modes[1]-1, modes[1]-1])
+        phi = custom_angle(U[modes[1]-1, modes[0]-1], U[modes[1]-1, modes[1]-1])
         invT[modes[0]-1, modes[0]-1] = np.exp(-1j * phi) * np.cos(theta)
         invT[modes[0]-1, modes[1]-1] = np.exp(-1j * phi) * np.sin(theta)
         invT[modes[1]-1, modes[0]-1] = -np.sin(theta)
@@ -281,3 +281,15 @@ def random_unitary(N):
     U = np.matmul(q, r)
 
     return U
+
+def custom_arctan(x1, x2):
+    if x2 != 0:
+        return np.arctan(abs(x1/x2))
+    else:
+        return np.pi/2
+
+def custom_angle(x1, x2):
+    if x2 != 0:
+        return np.angle(x1/x2)
+    else:
+        return 0

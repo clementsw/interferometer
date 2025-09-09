@@ -84,10 +84,10 @@ class Interferometer:
             complex-valued 2D numpy array representing the interferometer
         """
         N = int(self.count_modes())
-        U = np.eye(N, dtype=np.complex_)
+        U = np.eye(N, dtype=np.complex128)
 
         for BS in self.BS_list:
-            T = np.eye(N, dtype=np.complex_)
+            T = np.eye(N, dtype=np.complex128)
             T[BS.mode1 - 1, BS.mode1 - 1] = np.exp(1j * BS.phi) * np.cos(BS.theta)
             T[BS.mode1 - 1, BS.mode2 - 1] = -np.sin(BS.theta)
             T[BS.mode2 - 1, BS.mode1 - 1] = np.exp(1j * BS.phi) * np.sin(BS.theta)
@@ -187,7 +187,7 @@ def triangle_decomposition(U):
             modes = [N - jj - 1, N - jj]
             theta = custom_arctan(U[ii, N - 1 - jj], U[ii, N - 2 - jj])
             phi = -custom_angle(-U[ii, N - 1 - jj], U[ii, N - 2 - jj])
-            invT = np.eye(N, dtype=np.complex_)
+            invT = np.eye(N, dtype=np.complex128)
             invT[modes[0]-1, modes[0]-1] = np.exp(-1j * phi) * np.cos(theta)
             invT[modes[0]-1, modes[1]-1] = np.exp(-1j * phi) * np.sin(theta)
             invT[modes[1]-1, modes[0]-1] = -np.sin(theta)
@@ -218,7 +218,7 @@ def square_decomposition(U):
                 modes = [ii - jj + 1, ii + 2 - jj]
                 theta = custom_arctan(U[N-1-jj, ii-jj], U[N-1-jj, ii-jj+1])
                 phi = custom_angle(U[N-1-jj, ii-jj], U[N-1-jj, ii-jj+1])
-                invT = np.eye(N, dtype=np.complex_)
+                invT = np.eye(N, dtype=np.complex128)
                 invT[modes[0]-1, modes[0]-1] = np.exp(-1j * phi) * np.cos(theta)
                 invT[modes[0]-1, modes[1]-1] = np.exp(-1j * phi) * np.sin(theta)
                 invT[modes[1]-1, modes[0]-1] = -np.sin(theta)
@@ -230,7 +230,7 @@ def square_decomposition(U):
                 modes = [N+jj-ii-1, N+jj-ii]
                 theta = custom_arctan(U[N+jj-ii-1, jj], U[N+jj-ii-2, jj])
                 phi = custom_angle(-U[N+jj-ii-1, jj], U[N+jj-ii-2, jj])
-                T = np.eye(N, dtype=np.complex_)
+                T = np.eye(N, dtype=np.complex128)
                 T[modes[0]-1, modes[0]-1] = np.exp(1j * phi) * np.cos(theta)
                 T[modes[0]-1, modes[1]-1] = -np.sin(theta)
                 T[modes[1]-1, modes[0]-1] = np.exp(1j * phi) * np.sin(theta)
@@ -240,7 +240,7 @@ def square_decomposition(U):
 
     for BS in np.flip(left_T, 0):
         modes = [int(BS.mode1), int(BS.mode2)]
-        invT = np.eye(N, dtype=np.complex_)
+        invT = np.eye(N, dtype=np.complex128)
         invT[modes[0]-1, modes[0]-1] = np.exp(-1j * BS.phi) * np.cos(BS.theta)
         invT[modes[0]-1, modes[1]-1] = np.exp(-1j * BS.phi) * np.sin(BS.theta)
         invT[modes[1]-1, modes[0]-1] = -np.sin(BS.theta)
@@ -271,7 +271,7 @@ def random_unitary(N):
     Returns:
         complex-valued 2D numpy array representing the interferometer
     """
-    X = np.zeros([N, N], dtype=np.complex_)
+    X = np.zeros([N, N], dtype=np.complex128)
     for ii in range(N):
         for jj in range(N):
             X[ii, jj] = (np.random.normal() + 1j * np.random.normal()) / np.sqrt(2)

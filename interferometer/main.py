@@ -33,7 +33,7 @@ class Beamsplitter:
                 self.phi
                 )
         else:
-            repr = "\n Beam splitter between modes {} and {}: \n Theta angle: {:.2f} \n Phase: {:.2f} \n Loss parameter: {:.2f}".format(
+            repr = "\n Beam splitter between modes {} and {}: \n Theta angle: {:.2f} \n Phase: {:.2f} \n Alpha: {:.2f}".format(
                 self.mode1,
                 self.mode2,
                 self.theta,
@@ -52,6 +52,12 @@ class Interferometer:
     Clements, William R., et al. "Optimal design for universal multiport interferometers." Optica 3.12 (2016): 1460-1465.
     This transformation is parametrized by BS[2] (theta) which determines the beam splitter reflectivity, 
     and by BS[3] (phi). The interferometer also contains a list of output phases described by output_phases.
+    Additionally, if the loss parameter alpha_i has been set to a value other than 0 for the beam splitter BS_i, 
+    it will be lossy. 
+    This is implemented by multiplying the elements different from 1 in the transformation matrix T_i by e^{-alpha_i} 
+    for each lossy beam splitter.
+    This optional functionality allows to conduct experiments on the fidelity of the different meshes with respect to the loss parameter,
+    as described in the later sections of the paper (5).
     """
 
     def __init__(self):
@@ -98,11 +104,15 @@ class Interferometer:
         U = np.eye(N, dtype=np.complex128)
 
         for BS in self.BS_list:
+            if BS.alpha == 0.0:
+                lossTerm = 1
+            else:
+                lossTerm = np.exp(-BS.alpha)
             T = np.eye(N, dtype=np.complex128)
-            T[BS.mode1 - 1, BS.mode1 - 1] = np.exp(1j * BS.phi) * np.cos(BS.theta)
-            T[BS.mode1 - 1, BS.mode2 - 1] = -np.sin(BS.theta)
-            T[BS.mode2 - 1, BS.mode1 - 1] = np.exp(1j * BS.phi) * np.sin(BS.theta)
-            T[BS.mode2 - 1, BS.mode2 - 1] = np.cos(BS.theta)
+            T[BS.mode1 - 1, BS.mode1 - 1] = lossTerm * np.exp(1j * BS.phi) * np.cos(BS.theta)
+            T[BS.mode1 - 1, BS.mode2 - 1] = lossTerm * -np.sin(BS.theta)
+            T[BS.mode2 - 1, BS.mode1 - 1] = lossTerm * np.exp(1j * BS.phi) * np.sin(BS.theta)
+            T[BS.mode2 - 1, BS.mode2 - 1] = lossTerm * np.cos(BS.theta)
             U = np.matmul(T,U)
 
         while np.size(self.output_phases) < N:  # Autofill for users who don't want to bother with output phases
@@ -135,8 +145,9 @@ class Interferometer:
             plt.plot((x+0.3, x+1), (N - BS.mode2, N - BS.mode1), lw=1, color="blue")
             plt.plot((x+0.4, x+0.9), (N - (BS.mode2 + BS.mode1)/2, N - (BS.mode2 + BS.mode1)/2), lw=1, color="blue")
             reflectivity = "{:2f}".format(np.cos(BS.theta)**2)
+            loss = "{:2f}".format(np.exp(-BS.alpha))
             plt.text(x+0.9, N + 0.05 - (BS.mode2 + BS.mode1)/2, reflectivity[0:3], color="green", fontsize=7)
-
+            plt.text(x+0.2, N + 0.05 - (BS.mode2 + BS.mode1)/2, loss[0:3], color="black", fontsize=7)
             plt.plot((x+0.15, x+0.15), (N+0.3-(BS.mode2 + BS.mode1)/2., N+0.7-(BS.mode2 + BS.mode1)/2.), lw=1, color="blue")
             circle = plt.Circle((x+0.15, N+0.5-(BS.mode2 + BS.mode1)/2.), 0.1, fill=False)
             plt.gca().add_patch(circle)
@@ -169,6 +180,7 @@ class Interferometer:
 
 
         plt.text(max_x/2, -0.7, "green: BS reflectivity", color="green", fontsize=10)
+        plt.text(max_x/2, -1.05, "black: BS loss", color="black", fontsize=10)
         plt.text(max_x/2, -1.4, "red: phase shift", color="red", fontsize=10)
         plt.text(-1, N-0.3, "Light in", fontsize=10)
         plt.text(max_x+0.5, N-0.3, "Light out", fontsize=10)
